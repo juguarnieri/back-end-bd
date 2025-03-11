@@ -3,7 +3,7 @@ const userModel = require("../models/userModel");
 const getAllUsers = async (req, res) => {
     try {
         const users = await userModel.getUsers();
-        res.status(200).json(users);
+        res.json(users);
     } catch (error) {
         res.status(404).json({ message: "Erro ao buscar usuários." });
     }
@@ -20,6 +20,7 @@ const getUser = async (req, res) => {
         res.status(500).json({ message: "Erro ao buscar usuário." });
     }
 };
+
 const createUser = async (req, res) => {
     try {
         const { name, email } = req.body;
@@ -33,6 +34,7 @@ const createUser = async (req, res) => {
         res.status(500).json({ message: "Erro ao criar usuário." });
     }
 };
+
 const updateUser = async (req, res) => {
     try {
         const { name, email } = req.body;
@@ -46,7 +48,13 @@ const updateUser = async (req, res) => {
     }
 };
 
+const deleteUser = async (req, res) => {
+    try {
+        const message = await userModel.deleteUser(req.params.id);
+        res.json(message);
+    } catch (error) {
+        res.status(500).json({ message: "Erro ao deletar usuário." });
+    }
+};
 
-module.exports = { getAllUsers, getUser, createUser, updateUser };
-
-
+module.exports = { getAllUsers, getUser, createUser, updateUser, deleteUser };
