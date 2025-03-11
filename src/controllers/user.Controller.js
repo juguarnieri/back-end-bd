@@ -9,6 +9,19 @@ const getAllUsers = async (req, res) => {
     }
 };
 
-module.exports = { getAllUsers };
+const getUser = async (req, res) => {
+    try {
+        const user = await userModel.getUserById(req.params.id);
+        if (!user) {
+            return res.status(404).json({ message: "Usuário não encontrado." });
+        }
+        res.json(user);
+    } catch (error) {
+        res.status(500).json({ message: "Erro ao buscar usuário." });
+    }
+};
+
+
+module.exports = { getAllUsers, getUser };
 
 
