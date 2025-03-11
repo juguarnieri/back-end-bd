@@ -20,8 +20,22 @@ const getUser = async (req, res) => {
         res.status(500).json({ message: "Erro ao buscar usuário." });
     }
 };
+const createUser = async (req, res) => {
+    try {
+        const { name, email } = req.body;
+        const newUser = await userModel.createUser(name, email);
+        res.status(201).json(newUser);
+    } catch (error) {
+	 console.log(error);
+        if (error.code === "23505") { // Código de erro do PostgreSQL para chave única violada
+            return res.status(400).json({ message: "E-mail já cadastrado." });
+        }
+        res.status(500).json({ message: "Erro ao criar usuário." });
+    }
+};
 
 
-module.exports = { getAllUsers, getUser };
+
+module.exports = { getAllUsers, getUser, createUser };
 
 

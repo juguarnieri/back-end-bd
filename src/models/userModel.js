@@ -17,4 +17,4 @@ const createUser = async (name, email) => {
 };
 
 
-module.exports = { getUsers, getUserById };
+module.exports = { getUsers, getUserById, createUser };
