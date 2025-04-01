@@ -3,7 +3,7 @@
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
-    "pg": "^8.13.3"
+    "pg": "^8.14.1"
   },
   "devDependencies": {
     "nodemon": "^3.1.9"
@@ -15,10 +15,22 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js",
     "dev": "nodemon server.js"
-
   },
-  "keywords": ["Senai", "Projeto", "Back-end", "Banco de Dados"], 
+  "keywords": [
+    "Senai",
+    "Projeto",
+    "Back-end",
+    "Banco de Dados"
+  ],
   "author": "Júlia",
   "license": "MIT",
-  "description": "Neste respositório está o back-end do projeto de banco de dados do Senai"
+  "description": "Neste respositório está o back-end do projeto de banco de dados do Senai",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/juguarnieri/back-end-bd.git"
+  },
+  "bugs": {
+    "url": "https://github.com/juguarnieri/back-end-bd/issues"
+  },
+  "homepage": "https://github.com/juguarnieri/back-end-bd#readme"
 }
