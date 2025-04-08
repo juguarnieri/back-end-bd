@@ -10,7 +10,7 @@ app.use(express.json());
 
 app.use("/api", userRoutes);
 app.use("/api", postRoutes);
-app.use("/reports", reportRoutes);
+app.use("/api/reports", reportRoutes);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {

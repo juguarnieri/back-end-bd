@@ -28,7 +28,7 @@ const createUser = async (req, res) => {
         res.status(201).json(newUser);
     } catch (error) {
 	 console.log(error);
-        if (error.code === "23505") { // Código de erro do PostgreSQL para chave única violada
+        if (error.code === "23505") { 
             return res.status(400).json({ message: "E-mail já cadastrado." });
         }
         res.status(500).json({ message: "Erro ao criar usuário." });

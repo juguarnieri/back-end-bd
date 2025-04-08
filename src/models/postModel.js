@@ -1,5 +1,11 @@
 const pool = require("../config/database");
 
+const getPosts = async () => {
+    const query = "SELECT id, title, content, image, user_id FROM posts";
+    const { rows } = await pool.query(query); 
+    return rows;
+};
+
 const getAllPosts = async () => {
     const result = await pool.query("SELECT * FROM posts");
     return result.rows;
@@ -40,5 +46,12 @@ const deletePost = async (id) => {
 
     return { message: "Post deletado com sucesso." };
 };
-
-module.exports = { getAllPosts, getPostById, getPostsByUserId, createPost, updatePost, deletePost };
+module.exports = {
+    getPosts,
+    getAllPosts,
+    getPostById,
+    getPostsByUserId,
+    createPost,
+    updatePost,
+    deletePost,
+};
