@@ -1,8 +1,9 @@
-const postModel = require("../models/postModel");
+const PostModel = require("../models/postModel");
 
 const getAllPosts = async (req, res) => {
     try {
-        const posts = await postModel.getAllPosts();
+        const { title } = req.query;
+        const posts = await PostModel.getPosts(title)
         res.json(posts);
     } catch (error) {
         res.status(500).json({ message: "Erro ao buscar posts." });
@@ -11,7 +12,7 @@ const getAllPosts = async (req, res) => {
 
 const getPostById = async (req, res) => {
     try {
-        const post = await postModel.getPostById(req.params.id);
+        const post = await PostModel.getPostById(req.params.id);
         if (!post) {
             return res.status(404).json({ message: "Post não encontrado." });
         }
@@ -23,7 +24,7 @@ const getPostById = async (req, res) => {
 
 const getUserPosts = async (req, res) => {
     try {
-        const posts = await postModel.getPostsByUserId(req.params.userId);
+        const posts = await PostModel.getPostsByUserId(req.params.userId);
         res.json(posts);
     } catch (error) {
         res.status(500).json({ message: "Erro ao buscar posts do usuário." });
@@ -36,7 +37,7 @@ const createPost = async (req, res) => {
         if (!user_id) {
             return res.status(400).json({ message: "O campo user_id é obrigatório." });
         }
-        const newPost = await postModel.createPost(title, content, image, user_id);
+        const newPost = await PostModel.createPost(title, content, image, user_id);
         res.status(201).json(newPost);
     } catch (error) {
         console.error("Erro ao criar post:", error);
@@ -47,7 +48,7 @@ const createPost = async (req, res) => {
 const updatePost = async (req, res) => {
     try {
         const { title, content, image } = req.body;
-        const updatedPost = await postModel.updatePost(req.params.id, title, content, image);
+        const updatedPost = await PostModel.updatePost(req.params.id, title, content, image);
         if (!updatedPost) {
             return res.status(404).json({ message: "Post não encontrado." });
         }
@@ -59,7 +60,7 @@ const updatePost = async (req, res) => {
 
 const deletePost = async (req, res) => {
     try {
-        const message = await postModel.deletePost(req.params.id);
+        const message = await PostModel.deletePost(req.params.id);
         res.json(message);
     } catch (error) {
         res.status(500).json({ message: "Erro ao deletar post." });
