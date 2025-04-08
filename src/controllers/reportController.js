@@ -1,6 +1,6 @@
 const { format } = require("@fast-csv/format");
 const PDFDocument = require("pdfkit");
-const userModel = require("../models/userModel");
+const postModel = require("../models/postModel");
 
 const exportUsersCSV = async (req, res) => {
     try {
@@ -55,8 +55,6 @@ const exportUsersPDF = async (req, res) => {
     }
 };
 
-const postModel = require("../models/postModel");
-
 const exportPostsCSV = async (req, res) => {
     try {
         console.log("Iniciando exportação de posts...");
@@ -100,6 +98,7 @@ const exportPostsPDF = async (req, res) => {
 
         doc.fontSize(12).text("Id | Título | Conteúdo", { underline: true });
         doc.moveDown(0.5);
+
 
         posts.forEach((post) => {
             doc.text(`${post.id} | ${post.title} | ${post.content}`);
