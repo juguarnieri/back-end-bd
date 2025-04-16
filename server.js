@@ -5,15 +5,19 @@ const userRoutes = require("./src/routes/userRoutes");
 const postRoutes = require("./src/routes/postRoutes");  
 const reportRoutes = require("./src/routes/reportRoutes");
 const setupSwagger = require("./src/config/swagger");
+const path = require("path");
 
+// Inicialize o app antes de usar
+const app = express(); 
 
-const app = express();
+// Configurações do middleware e rotas
+app.use("/uploads", express.static(path.join(__dirname, "uploads"))); // Serve arquivos estáticos da pasta uploads
+
 app.use(cors());
 app.use(express.json());
 
-app.use("/api", userRoutes);
-
-app.use("/api", postRoutes);
+app.use("/", userRoutes);
+app.use("/", postRoutes);
 app.use("/api/reports", reportRoutes);
 setupSwagger(app);
 
