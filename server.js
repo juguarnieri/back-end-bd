@@ -16,8 +16,8 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads"))); // Serve a
 app.use(cors());
 app.use(express.json());
 
-app.use("/api", userRoutes);
-app.use("/api", postRoutes);
+app.use("/api/", userRoutes);
+app.use("/api/", postRoutes);
 app.use("/api/reports", reportRoutes);
 setupSwagger(app);
 

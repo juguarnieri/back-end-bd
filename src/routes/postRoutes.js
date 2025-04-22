@@ -1,6 +1,9 @@
 const express = require("express");
 const router = express.Router();
 const postController = require("../controllers/postController");
+const apiKeyMiddleware = require("../config/apiKey"); // 🔐
+
+router.use(apiKeyMiddleware); // 🔒 Aplica para todas as rotas abaixo
 
 /**
  * @swagger
