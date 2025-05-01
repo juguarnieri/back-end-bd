@@ -1,60 +1,114 @@
 const pool = require("../config/database");
 
 const getPosts = async (title) => {
-    if(!title) {
-        const result = await pool.query (`SELECT posts.*, users.name AS users_name 
-            FROM posts 
-            LEFT JOIN users ON posts.user_id = users.id`
-        );
-            return result.rows
-    } else {
-        const result = await pool.query (`SELECT posts.*, users.name AS users_name 
-            FROM posts 
-            LEFT JOIN users ON posts.user_id = users.id WHERE posts.title ILIKE $1`,[`%${title}%`]
-        );
-        return result.rows
-    }
-}
+    try {
+        let query = `SELECT posts.*, users.name AS users_name 
+                     FROM posts 
+                     LEFT JOIN users ON posts.user_id = users.id`;
 
-const getAllPosts = async () => {
-    const result = await pool.query("SELECT * FROM posts");
-    return result.rows;
+        if (title) {
+            query += ` WHERE posts.title ILIKE $1`; 
+            const { rows } = await pool.query(query, [`%${title}%`]);
+            return rows;
+        }
+
+        const { rows } = await pool.query(query);
+        return rows;
+    } catch (error) {
+        console.error("Erro ao buscar posts:", error);
+        throw error; 
+    }
 };
 
 const getPostById = async (id) => {
-    const result = await pool.query("SELECT * FROM posts WHERE id = $1", [id]);
-    return result.rows[0];
+    try {
+        if (!id) {
+            throw new Error("ID não fornecido");
+        }
+
+        const query = "SELECT * FROM posts WHERE id = $1";
+        const { rows } = await pool.query(query, [id]);
+
+        if (rows.length === 0) {
+            return null; 
+        }
+
+        return rows[0]; 
+    } catch (error) {
+        console.error("Erro ao buscar post por ID:", error);
+        throw error;
+    }
 };
 
-const getPostsByUserId = async (userId) => {
-    const result = await pool.query("SELECT * FROM posts WHERE user_id = $1", [userId]);
-    return result.rows;
-};
-
-const createPost = async (title, content, image, userId) => {
-    const result = await pool.query(
-        "INSERT INTO posts (title, content, image, user_id) VALUES ($1, $2, $3, $4) RETURNING *",
-        [title, content, image, userId]
-    );
-    return result.rows[0];
+const createPost = async (title, content, photo, userId) => {
+    const query = `
+        INSERT INTO posts (title, content, photo, user_id)
+        VALUES ($1, $2, $3, $4)
+        RETURNING *;
+    `;
+    const values = [title, content, photo, userId];
+    
+    const { rows } = await pool.query(query, values);
+    return rows[0];
 };
 
 const updatePost = async (id, title, content, image) => {
-    const result = await pool.query(
-        "UPDATE posts SET title = $1, content = $2, image = $3 WHERE id = $4 RETURNING *",
-        [title, content, image, id]
-    );
-    return result.rows[0];
+    try {
+        if (!id) {
+            throw new Error("ID não fornecido");
+        }
+
+        if (!title || !content) {
+            throw new Error("Os campos 'title' e 'content' são obrigatórios.");
+        }
+
+        const query = `
+            UPDATE posts 
+            SET title = $1, content = $2, photo = $3
+            WHERE id = $4
+            RETURNING *;
+        `;
+        const { rows } = await pool.query(query, [title, content, image, id]);
+
+        if (rows.length === 0) {
+            return null; 
+        }
+
+        return rows[0]; 
+    } catch (error) {
+        console.error("Erro ao atualizar post:", error);
+        throw error;
+    }
 };
 
 const deletePost = async (id) => {
-    const result = await pool.query("DELETE FROM posts WHERE id = $1 RETURNING *", [id]);
+    try {
+        if (!id) {
+            throw new Error("ID não fornecido");
+        }
 
-    if (result.rowCount === 0) {
-        return { error: "Post não encontrado." };
+        const query = `
+            DELETE FROM posts 
+            WHERE id = $1
+            RETURNING *;
+        `;
+        const { rows } = await pool.query(query, [id]);
+
+        if (rows.length === 0) {
+            return null; 
+        }
+
+        return { message: "Post deletado com sucesso." }; 
+    } catch (error) {
+        console.error("Erro ao deletar post:", error);
+        throw error; 
     }
-
-    return { message: "Post deletado com sucesso." };
 };
 
-module.exports = { getPosts, getAllPosts, getPostById, getPostsByUserId, createPost, updatePost, deletePost };
+module.exports = {
+    getPosts,
+    getPostById,
+    createPost,
+    updatePost,
+    deletePost,
+};

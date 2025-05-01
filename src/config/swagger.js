@@ -1,24 +1,36 @@
-// src/config/swagger.js
-
-const swaggerJsdoc = require("swagger-jsdoc");
 const swaggerUi = require("swagger-ui-express");
+const swaggerJsdoc = require("swagger-jsdoc");
 
-const options = {
-  definition: {
-    openapi: "3.0.0",
-    info: {
-      title: "API de Posts",
-      version: "1.0.0",
-      description: "Documentação da API de Posts usando Swagger",
+const swaggerOptions = {
+    definition: {
+        openapi: "3.0.0",
+        info: {
+            title: "API Documentation",
+            version: "1.0.0",
+            description: "Documentação da API para gerenciamento de posts e usuários",
+        },
+        components: {
+            securitySchemes: {
+                ApiKeyAuth: {
+                    type: "apiKey",
+                    in: "header",
+                    name: "x-api-key", 
+                },
+            },
+        },
+        security: [
+            {
+                ApiKeyAuth: [], 
+            },
+        ],
     },
-  },
-  apis: ["./src/routes/*.js"], // ajuste o caminho se necessário
+    apis: ["./src/routes/*.js"], 
 };
 
-const specs = swaggerJsdoc(options);
+const swaggerSpec = swaggerJsdoc(swaggerOptions);
 
-function setupSwagger(app) {
-  app.use("/doc", swaggerUi.serve, swaggerUi.setup(specs));
-}
+const setupSwagger = (app) => {
+    app.use("/api-docs1", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+};
 
 module.exports = setupSwagger;

@@ -1,27 +1,27 @@
 const multer = require("multer");
 const path = require("path");
 
-// Pasta onde as imagens serão salvas
 const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, "uploads/");
-    },
-    filename: (req, file, cb) => {
-        const uniqueName = Date.now() + "-" + file.originalname;
-        cb(null, uniqueName);
-    },
+  destination: (req, file, cb) => cb(null, "uploads/"),
+  filename: (req, file, cb) => {
+    const uniqueName = Date.now() + "-" + file.originalname;
+    cb(null, uniqueName);
+  },
 });
 
 const upload = multer({
-    storage,
-    fileFilter: (req, file, cb) => {
-        const ext = path.extname(file.originalname).toLowerCase();
-        const allowedExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.bmp'];
-        if (!allowedExtensions.includes(ext)) {
-            return cb(new Error("Apenas imagens são permitidas"));
-        }
-        cb(null, true);
+  storage,
+  fileFilter: (req, file, cb) => {
+    const ext = path.extname(file.originalname).toLowerCase();
+    const allowedExtensions = [".jpg", ".jpeg", ".png", ".gif", ".bmp"];
+    if (!allowedExtensions.includes(ext)) {
+      return cb(new Error("Apenas imagens são permitidas"));
     }
+    cb(null, true);
+  },
+  limits: {
+    fileSize: 5 * 1024 * 1024, // Limite de 5MB
+  },
 });
 
 module.exports = upload;

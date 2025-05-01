@@ -1,9 +1,20 @@
 CREATE DATABASE cadastro;
+\c cadastro;
+
 
 CREATE TABLE users (
     id SERIAL PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
-    email VARCHAR(100) UNIQUE NOT NULL
+    email VARCHAR(100) UNIQUE NOT NULL,
+    photo TEXT
+);
+
+CREATE TABLE posts (
+    id SERIAL PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    content TEXT NOT NULL,
+    photo TEXT,
+    user_id INT  REFERENCES users(id) ON DELETE CASCADE -- Garantindo que o user_id é obrigatoriamente atribuído
 );
 
 INSERT INTO users (name, email, photo) VALUES
@@ -60,15 +71,8 @@ INSERT INTO users (name, email, photo) VALUES
     ('Cláudia Lima', 'claudia.lima@email.com', NULL),
     ('Márcio Pereira', 'marcio.pereira@email.com', NULL);
 
-CREATE TABLE posts (
-    id SERIAL PRIMARY KEY,
-    title VARCHAR(255) NOT NULL,
-    content TEXT NOT NULL,
-    image VARCHAR(500), 
-    user_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE
-);
 
-INSERT INTO posts (title, content, image, user_id) VALUES
+INSERT INTO posts (title, content, photo, user_id) VALUES
 ('Post 1', 'Conteúdo do primeiro post', 'https://example.com/imagem1.jpg', 1),
 ('Post 2', 'Conteúdo do segundo post', 'https://example.com/imagem2.png', 2),
 ('Post 3', 'Conteúdo do terceiro post', 'https://example.com/imagem3.jpeg', 3),
@@ -78,6 +82,7 @@ INSERT INTO posts (title, content, image, user_id) VALUES
 ('Post 7', 'Conteúdo do sétimo post', 'https://example.com/imagem7.jpeg', 3),
 ('Post 8', 'Conteúdo do oitavo post', 'https://example.com/imagem8.gif', 4);
 
-ALTER TABLE users ADD COLUMN photo TEXT;
 
-ALTER TABLE posts ADD COLUMN photo TEXT;
+
+
+ALTER TABLE posts ALTER COLUMN user_id DROP NOT NULL;
